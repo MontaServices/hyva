@@ -3,6 +3,9 @@
 namespace Monta\MyModule\Magewire\Checkout\Shipping\Method;
 
 use http\Exception;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationInterface;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultFactory;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -13,20 +16,20 @@ use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
 use Monta\CheckoutApiWrapper\Objects\Settings;
 use Monta\CheckoutApiWrapper\Objects\ShippingOption;
 
-class DeliveryDates extends Component
+class DeliveryDates extends Component implements EvaluationInterface
 {
     private CheckoutSession $checkoutSession;
+    protected Carrier $carrierConfig;
 
     public const TYPE_DELIVERY = 'delivery';
     public const TYPE_PICKUP = 'pickup';
+    public $type = null;
+
     public $shouldShowDatePicker = true;
     public $result;
     public $userSelectedShipperCode = null;
     public $userSelectedShipperOptions = [];
-    public $type = null;
-
     private $montaApi = null;
-    protected Carrier $carrierConfig;
 
     public $address = null;
 
@@ -46,16 +49,22 @@ class DeliveryDates extends Component
         'monta_pickup_selected' => 'PickupSelected',
     ];
 
-//    protected $loader = [
-//        'chooseShipperClicked' => 'Test1234',
-//        'emitTypeEvent' => 'Loading....'
-//        ];
     protected $loader = 'Loading....';
 
     public function __construct(CheckoutSession $checkoutSession, Carrier $carrierConfig)
     {
         $this->checkoutSession = $checkoutSession;
         $this->carrierConfig = $carrierConfig;
+    }
+
+    public function evaluateCompletion(EvaluationResultFactory $resultFactory): EvaluationResultInterface
+    {
+        if($this->userSelectedShipperCode == null)
+        {
+            return $resultFactory->createErrorMessage((string) __('Please select a shipper before continuing'));
+        }
+
+        return $resultFactory->createSuccess();
     }
 
     public function deliveryButtonClicked()
@@ -427,5 +436,4 @@ class DeliveryDates extends Component
 
         return null;
     }
-
 }
