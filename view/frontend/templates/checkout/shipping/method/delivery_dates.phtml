@@ -1,0 +1,43 @@
+<?php
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use \Magento\Framework\App\ObjectManager;
+
+/**
+* @var Escaper $escaper
+* @var Template $block
+*/
+
+?>
+
+<div wire:init="init()">
+    <?php if ($magewire->shouldShowDatePicker): ?>
+
+    <div class="flex mb-4">
+        <button wire:click="deliveryButtonClicked()" class="btn btn-primary btn-next h-16">
+            Bezorgen
+        </button>
+
+        <button  wire:click="pickupButtonClicked()" class="btn btn-primary btn-next">
+            Afhalen
+        </button>
+    </div>
+
+        <div class="container">
+            <!--<div wire:ignore>-->
+            <div>
+                <?php if (($magewire->userSelectedShipperCode != null || $magewire->userSelectedShipperCode != '') && $magewire->type == 'delivery'): ?>
+                    <?= $block->getChildHtml('monta_delivery_monta_delivery-options-selected-overview') ?>
+                <?php elseif (($magewire->userSelectedShipperCode != null || $magewire->userSelectedShipperCode != '') && $magewire->type == 'pickup'): ?>
+                    <?= $block->getChildHtml('monta_delivery_monta_pickup-options-selected-overview') ?>
+                <?php elseif ($magewire->type == 'delivery'): ?>
+                    <?= $block->getChildHtml('monta_delivery_monta_delivery-options') ?>
+                <?php elseif ($magewire->type == 'pickup'): ?>
+                    <?= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
+                <?php endif; ?>
+            </div>
+    <?php endif; ?>
+
+<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initAutocomplete&libraries=places&v=weekly" defer></script>-->
+</div>

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceBlock name="checkout.shipping.methods.after">
+
+        <!-- Shipping Renderer: Day Time Delivery: -->
+            <block name="checkout.shipping.method.something"
+                   as="monta_delivery_monta_delivery"
+                   template="Monta_MyModule::checkout/shipping/method/delivery_dates.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Monta\MyModule\Magewire\Checkout\Shipping\Method\DeliveryDates
+                    </argument>
+                </arguments>
+
+                    <block name="checkout.shipping.method.delivery-options"
+                           as="monta_delivery_monta_delivery-options"
+                           template="Monta_MyModule::checkout/shipping/method/delivery_options.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                Monta\MyModule\Magewire\Checkout\Shipping\Method\DeliveryOptions
+                            </argument>
+                        </arguments>
+                    </block>
+
+                    <block name="checkout.shipping.method.pickup-options"
+                           as="monta_delivery_monta_pickup-options"
+                           template="Monta_MyModule::checkout/shipping/method/pickup_options.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                Monta\MyModule\Magewire\Checkout\Shipping\Method\PickupOptions
+                            </argument>
+                        </arguments>
+                    </block>
+
+
+
+
+
+
+                    <block name="checkout.shipping.method.delivery-options-selected"
+                           as="monta_delivery_monta_delivery-options-selected-overview"
+                           template="Monta_MyModule::checkout/shipping/method/delivery_option_selected_overview.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                Monta\MyModule\Magewire\Checkout\Shipping\Method\DeliveryOptionSelectedOverview
+                            </argument>
+                        </arguments>
+                    </block>
+
+                <block name="checkout.shipping.method.pickup-options-selected"
+                       as="monta_delivery_monta_pickup-options-selected-overview"
+                       template="Monta_MyModule::checkout/shipping/method/pickup_option_selected_overview.phtml">
+                    <arguments>
+                        <argument name="magewire" xsi:type="object">
+                            Monta\MyModule\Magewire\Checkout\Shipping\Method\PickupOptionSelectedOverview
+                        </argument>
+                    </arguments>
+                </block>
+
+
+
+
+
+
+
+
+
+
+                    <block name="checkout.shipping.method.selected-pickup-point"
+                           as="selected-pickup-point"
+                           template="Monta_MyModule::magewire//selected-pickup-point.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                Monta\MyModule\Magewire\SelectedPickupPoint
+                            </argument>
+                        </arguments>
+                    </block>
+            </block>
+        </referenceBlock>
+    </body>
+</page>
+

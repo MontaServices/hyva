@@ -1,0 +1,98 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @var Escaper $escaper
+ * @var Template $block
+ */
+?>
+
+<!--<button onclick="initMap()">Click for the amazing Maps</button>-->
+<div id="map" style="width: 500px; height: 400px;"></div>
+<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M"></script>
+<!--<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initMap"></script>-->
+
+<script>
+    let markers = [];
+    let selectedMapPickupPoint = '';
+
+    function initMap(locations) {
+        console.log('Going to init now...', locations)
+        var options = {
+            zoom: 15,
+        };
+
+        var bounds = new google.maps.LatLngBounds();
+        var map = new google.maps.Map(document.getElementById('map'), options);
+
+        for (i = 0; i < locations.length; i++) {
+            // console.log(locations[i]['latitude'])
+            // console.log(locations[i]['longitude'])
+            var marker = new google.maps.Marker({
+                position: {lat: locations[i]['latitude'], lng: locations[i]['longitude']},
+                map: map,
+            });
+
+            markers.push({
+                code: locations[i]['code'],
+                marker: marker
+            })
+
+            bounds.extend(marker.position);
+            addInfoWindow(marker, locations[i]['company']);
+
+            map.fitBounds(bounds);
+        }
+
+        document.getElementById("selectShipperMapsButton").addEventListener("click", displayDate);
+    }
+
+    function displayDate() {
+        Magewire.emit('pickupSelectedFromMaps', selectedMapPickupPoint)
+    }
+
+    // ToDO: Create function here
+    function addMarker(latitude, longitude, ) {
+
+    }
+
+    function addInfoWindow(marker, message) {
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: message
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            marker.select()
+            console.log('marker title', marker.select())
+            // document.getElementById('');
+            infoWindow.open(map, marker);
+        });
+    }
+
+    function pickupSelected(pickupCode) {
+        if(pickupCode == null) {
+            return;
+        }
+
+        selectedMapPickupPoint = pickupCode;
+
+        document.getElementById('selectedShipperText').textContent = selectedMapPickupPoint;
+    }
+
+
+    function deliveryDatePicker(wire, options = {}) {
+        // return {
+        //     ...
+        // }
+    }
+
+    window.addEventListener('checkout:step:loaded', event => {
+        const requestType = event.detail.subsequent ? 'subsequent' : 'preceeding';
+        console.log(`Checkout Step: ${event.detail.route}, Request Type: ${requestType}`);
+    }, {once: true})
+</script>
