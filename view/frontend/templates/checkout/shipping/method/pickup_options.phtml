@@ -16,61 +16,61 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
 ?>
 
 <div>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initMap"></script>
+    <script defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initMap"></script>
     <div class="container">
         <div class="flex flex-col mt-4 space-y-2">
-            <?php foreach ($magewire->pickupOptions as $pickup): ?>
-                <div class="flex-item shadow shadow-md p-2 items-center">
+            <?php if (isset($magewire->pickupOptions) && count($magewire->pickupOptions) > 0): ?>
+                <?php $pickup = $magewire->pickupOptions[0] ?>
+                <div class="flex-item p-2 items-center">
                     <div class="flex flex-row">
-                        <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= $pickup['displayName'] ?></h3>
-                        <div class=items-center"><?= $pickup['priceFormatted'] ?></div>
+                        <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= $magewire->pickupOptions[0]['displayName'] ?></h3>
+                        <div class=items-center"><?= $magewire->pickupOptions[0]['priceFormatted'] ?></div>
                     </div>
                     <div class="flex flex-row">
-                        <span><?= $pickup['street'] ?> <?= $pickup['company'] ?> <?= $pickup['distanceMeters'] / 1000 ?> km</span>
+                        <span><?= $pickup['street'] ?> <?= $magewire->pickupOptions[0]['company'] ?> <?= $magewire->pickupOptions[0]['distanceMeters'] / 1000 ?> km</span>
                     </div>
                     <div class="flex flex-row">
                         <span><?= $pickup['street'] ?> <?= $pickup['houseNumber'] ?></span>
                     </div>
                     <div class="flex flex-row">
-                        <span><?= $pickup['openingTimes'][0]['from'] ?> <?= $pickup['openingTimes'][0]['to'] ?></span>
-                    </div>
-                    <div class="flex flex-row">
                         <span><?= $pickup['postalCode'] ?> <?= $pickup['city'] ?> (<?= $pickup['countryCode'] ?>)</span>
                     </div>
-                    <button class="btn btn-primary btn-next"
-                            wire:click="choosePickupButtonClicked('<?= $pickup['code'] ?>')">Kies verzender
-                    </button>
+                    <!--                    <button class="btn btn-primary btn-next"-->
+                    <!--                            wire:click="choosePickupButtonClicked('-->
+                    <?php //= $pickup['code'] ?><!--')">Kies verzender-->
+                    <!--                    </button>-->
                 </div>
-            <?php endforeach ?>
-        </div>
 
-        <?php $testt = json_encode($magewire->pickupOptions)?>
+            <?php endif; ?>
+        </div>
+        <?php $testt = json_encode($magewire->pickupOptions) ?>
 
         <?php
         $contentt = <<<HTML
-        <h3 id="selectedShipperText">selected shipper</h3>
-            <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Select shipper</button>
-        <div class="flex flex-row">
-            <div id="map" style="height: 500px; width: 500px;"></div>
-        <ul>
-        HTML;//                @click=" $wire.set("foo", Math.random()) ">
-        foreach($magewire->pickupOptions as $pickup) {
+<h3 id="selectedShipperText">selected shipper</h3>
+    <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Select shipper</button>
+<div class="flex flex-row">
+    <div id="map" style="height: 500px; width: 500px;"></div>
+<ul>
+HTML;//                @click=" $wire.set("foo", Math.random()) ">
+        foreach ($magewire->pickupOptions as $pickup) {
             $contentt .= '
-                <li id="'.$pickup['code'].'" class=""
-                @click="pickupSelected('. $pickup['code'] .');";
-                >
-                    ' . $pickup['company'] .
+        <li id="' . $pickup['code'] . '" class=""
+        @click="pickupSelected(' . $pickup['code'] . ');";
+        >
+            ' . $pickup['company'] .
                 '</li>';
         }
         echo '</ul></div>';
         ?>
 
-        <!--<button onclick="initMap(<?= htmlentities($testt) ?>)">Init map</button>-->
 
         <div x-data="hyva.modal()">
-            <button @click="show" onclick="initMap(<?= htmlentities($testt) ?>)" type="button" class="btn mt-40" aria-haspopup="dialog">
-               Show Google Maps
-            </button>
+            <a @click="show" onclick="initMap(<?= htmlentities($testt) ?>)"
+                    aria-haspopup="dialog">
+                Wijzig ophaalpunt
+            </a>
             <?= $modalViewModel->createModal()->withContent($contentt)->positionCenter()
                 ->withAriaLabelledby('the-label')
                 ->addDialogClass('border', 'border-10', 'border-blue-800', 'w-1/2', 'h-1/2')
@@ -78,45 +78,7 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
         </div>
 
 
-<!--        <script>-->
-<!--            function initMap() {-->
-<!--                console.log('Going to init now...')-->
-<!--                var options = {-->
-<!--                    zoom: 15,-->
-<!--                    center: {lat: 33.933241, lng: -84.340288},-->
-<!--                };-->
-<!--                var map = new google.maps.Map(document.getElementById('map'), options);-->
-<!--                console.log('map???', map)-->
-<!--                var marker = new google.maps.Marker({-->
-<!--                    position: {lat: 33.933241, lng: -84.340288},-->
-<!--                    map: map,-->
-<!--                    content: '<div class="mydivclass"> <h2>Myheading</h2> <p>mytextblock</p> </div>',-->
-<!--                    icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'-->
-<!--                });-->
-<!---->
-<!--                // let arr = [-->
-<!--                //     {-->
-<!--                //         'latitude_chargement': 33.933241-->
-<!--                //         'longitude_chargement': -84.340288-->
-<!--                //     }-->
-<!--                // ]-->
-<!---->
-<!--                // for(i = 0; i < arr.length; i++)-->
-<!--                // {-->
-<!--                //     marker =  new google.maps.Marker({-->
-<!--                //         position: new google.maps.LatLng(arr[i].latitude_chargement, arr[i].longitude_chargement),-->
-<!--                //         map: map,-->
-<!--                //         icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'-->
-<!--                //         content: '<div class="mydivclass"> <h2>Myheading</h2> <p>mytextblock</p> </div>',-->
-<!--                //     });-->
-<!--                // }-->
-<!---->
-<!---->
-<!--            }-->
-<!--        </script>-->
-
-
-
-
     </div>
+</div>
+
 

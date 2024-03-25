@@ -15,7 +15,17 @@ use Magento\Framework\View\Element\Template;
 <div id="map" style="width: 500px; height: 400px;"></div>
 <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M"></script>
 <!--<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initMap"></script>-->
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
 
+</style>
 <script>
     let markers = [];
     let selectedMapPickupPoint = '';
@@ -95,4 +105,6 @@ use Magento\Framework\View\Element\Template;
         const requestType = event.detail.subsequent ? 'subsequent' : 'preceeding';
         console.log(`Checkout Step: ${event.detail.route}, Request Type: ${requestType}`);
     }, {once: true})
+
+
 </script>

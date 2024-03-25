@@ -25,9 +25,9 @@ class DeliveryOptions extends Component
 
         $this->deliveryOptions = $data;
 
-        if(count($this->deliveryOptionsForSelectedDate) == 0) {
-            $this->setSelectedDate($this->deliveryOptions[0]['date']);
-        }
+//        if(count($this->deliveryOptionsForSelectedDate) == 0) {
+//            $this->setSelectedDate($this->deliveryOptions[0]['date']);
+//        }
 
     }
 

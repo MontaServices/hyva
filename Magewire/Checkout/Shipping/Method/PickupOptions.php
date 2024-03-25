@@ -37,7 +37,7 @@ class PickupOptions extends Component
 
     public function boot(): void
     {
-
+        $test = $this->pickupOptions;
     }
 
     public function choosePickupButtonClicked($pickupCode)

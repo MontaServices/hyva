@@ -72,7 +72,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->type = self::TYPE_DELIVERY;
         $this->userSelectedShipperCode = null;
 
-        if(!is_array($this->result['DeliveryOptions'])) {
+        if(!isset($this->result) ||   !is_array($this->result['DeliveryOptions'])) {
             return;
         }
 
@@ -99,12 +99,13 @@ class DeliveryDates extends Component implements EvaluationInterface
 
         if($this->type == null) {
             $this->type = self::TYPE_DELIVERY;
+            $this->emit('monta_pickup_button_selected', $pickupArray);
             $this->emit('monta_delivery_button_selected', $deliveryArray);
         }
 
         if($this->type == self::TYPE_DELIVERY) {
             $this->emit('monta_delivery_button_selected', $deliveryArray);
-            return;
+//            return;
         }
 
         if ($this->type == self::TYPE_PICKUP) {
