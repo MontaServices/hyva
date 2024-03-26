@@ -4,45 +4,46 @@ use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /**
-* @var Escaper $escaper
-* @var Template $block
-*/
+ * @var Escaper $escaper
+ * @var Template $block
+ */
 
 ?>
 
 
-    <?php if ($magewire->selectedDeliveryOption != null): ?>
-<!--    --><?php //= var_dump($magewire->selectedDeliveryOption) ?>
-<!--    --><?php //= var_dump($magewire->selectedDeliveryOption) ?>
+<?php if ($magewire->selectedDeliveryOption != null): ?>
+    <!--    --><?php //= var_dump($magewire->selectedDeliveryOption) ?>
+    <!--    --><?php //= var_dump($magewire->selectedDeliveryOption) ?>
     <div class="flex flex-col mt-4 space-y-2">
-            <div class="flex-item shadow shadow-md p-2 items-center">
-                <div class="flex flex-row">
-                    <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= '' . $magewire->selectedDeliveryOption['company'] ?></h3>
-                    <div class= items-center"><?= $magewire->selectedDeliveryOption['priceFormatted'] ?></div>
-                </div>
-                <div class="flex flex-row">
-                    <p"><?= $magewire->selectedDeliveryOption['displayName'] ?> | <?= round($magewire->selectedDeliveryOption['distanceMeters'] / 1000, 2) ?> km</p>
-                </div>
-                <div class="flex flex-row">
-                    <p"><?= $magewire->selectedDeliveryOption['postalCode'] . ' ' . $magewire->selectedDeliveryOption['city'] . ' (' . $magewire->selectedDeliveryOption['countryCode'] .  ')'?></p>
-                </div>
-
-                <div class="mt-4">
-                    <a href="#">Toon openingstijden</a>
-                </div>
+        <div class="flex-item shadow shadow-md p-2 items-center">
+            <div class="flex flex-row">
+                <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= '' . $magewire->selectedDeliveryOption['company'] ?></h3>
+                <div class=items-center"><?= $magewire->selectedDeliveryOption['priceFormatted'] ?></div>
             </div>
+            <div class="flex flex-row">
+                <p><?= $magewire->selectedDeliveryOption['displayName'] ?>
+                | <?= round($magewire->selectedDeliveryOption['distanceMeters'] / 1000, 2) ?> km</p>
+            </div>
+            <div class="flex flex-row">
+                <p><?= $magewire->selectedDeliveryOption['postalCode'] . ' ' . $magewire->selectedDeliveryOption['city'] . ' (' . $magewire->selectedDeliveryOption['countryCode'] . ')' ?></p>
+            </div>
+
+            <div class="mt-4">
+                <a href="#">Toon openingstijden</a>
+            </div>
+        </div>
 
         <div class="flex flex-col mt-4 space-y-2">
             <div class="flex-item shadow shadow-md p-2 items-center mt-4">
                 <div class="flex flex-row">
-        <div>
-            <a href="#">Klik hier om een andere bezorgoptie te kiezen</a>
-        </div>
+                    <div>
+                        <a href="#">Klik hier om een andere bezorgoptie te kiezen</a>
+                    </div>
                 </div>
             </div>
         </div>
 
 
     </div>
-    <?php endif; ?>
+<?php endif; ?>
 

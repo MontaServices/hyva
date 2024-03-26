@@ -105,7 +105,7 @@ class DeliveryDates extends Component implements EvaluationInterface
 
         if($this->type == self::TYPE_DELIVERY) {
             $this->emit('monta_delivery_button_selected', $deliveryArray);
-//            return;
+            return;
         }
 
         if ($this->type == self::TYPE_PICKUP) {

@@ -14,48 +14,45 @@ use \Magento\Framework\App\ObjectManager;
 <div wire:init="init()">
     <?php if ($magewire->shouldShowDatePicker): ?>
 
-    <div class="flex flex-col gap-2">
-        <div tabindex="1"
-             class="flex  flex-row rounded-lg border-slate-300 border-2  justify-between focus:border-blue-300 ">
-            <div class="basis-2/4 p-6">
-                Standaard bezorging
+        <div class="flex flex-col gap-2">
+            <div tabindex="1"
+                 class="flex  flex-row rounded-lg border-slate-300 border-2  justify-between focus:border-blue-300 ">
+                <div class="basis-2/4 p-6">
+                    Standaard bezorging
+                </div>
+                <div class="basis-1/4 p-6">
+                    Uw order wordt bezorgd met .......
+                </div>
+                <div class="basis-1/4 p-6">
+                    Prijs
+                </div>
             </div>
-            <div class="basis-1/4 p-6">
-                Uw order wordt bezorgd met .......
+            <div tabindex="2" class="flex flex-col rounded-lg border-slate-300 border-2  focus:border-blue-300">
+                <div class="basis-1/2 p-6 bg-slate-transparent focus:bg-slate-400 hover:bg-slate-900">
+                    Kies zelf je bezorgdatum
+                </div>
+                <div class="flex w-full overflow-x-hidden">
+                    <?= $block->getChildHtml('monta_delivery_monta_delivery-options') ?>
+                </div>
             </div>
-            <div class="basis-1/4 p-6">
-                Prijs
+
+
+            <div tabindex="3" class="flex flex-col rounded-lg border-slate-300 border-2 focus:border-blue-300">
+                <!--        --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
+                <div class="basis-1/2 p-6 bg-slate-transparent focus:bg-slate-400 hover:bg-slate-900">
+                    Ophaalpunt
+                    <?= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
+
+                </div>
+                <!--    <div>-->
+                <!--        <p class="p-6" wire:click="pickupButtonClicked()">Wijzig ophaalpunt</p>-->
+                <!---->
+                <!--            --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
+                <!--    </div>-->
+
             </div>
         </div>
-        <div tabindex="2" class="flex flex-col rounded-lg border-slate-300 border-2  focus:border-blue-300">
-            <div class="basis-1/2 p-6 bg-slate-transparent focus:bg-slate-400 hover:bg-slate-900">
-                Kies zelf je bezorgdatum
-            </div>
-            <div class="flex w-full overflow-x-hidden">
-
-
-                <?= $block->getChildHtml('monta_delivery_monta_delivery-options') ?>
-
-
-            </div>
-
-        </div>
-
-    </div>
-    <div tabindex="1" class="flex flex-col rounded-lg border-slate-300 border-2 focus:border-blue-300">
-        <!--        --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
-        <div class="basis-1/2 p-6 bg-slate-transparent focus:bg-slate-400 hover:bg-slate-900">
-            Ophaalpunt
-            <?= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
-
-        </div>
-        <!--    <div>-->
-        <!--        <p class="p-6" wire:click="pickupButtonClicked()">Wijzig ophaalpunt</p>-->
-        <!---->
-        <!--            --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
-        <!--    </div>-->
-
-    </div>
+    <?php endif; ?>
     <!---->
     <!--    <div class="flex mb-4">-->
     <!--        <button wire:click="deliveryButtonClicked()" class="btn btn-primary btn-next h-16">-->
@@ -68,6 +65,7 @@ use \Magento\Framework\App\ObjectManager;
     <!--    </div>-->
 
     <div class="container">
+        <div>test</div>
         <!--<div wire:ignore>-->
         <div>
             <?php if (($magewire->userSelectedShipperCode != null || $magewire->userSelectedShipperCode != '') && $magewire->type == 'delivery'): ?>
@@ -78,8 +76,8 @@ use \Magento\Framework\App\ObjectManager;
                 <!--                --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
             <?php endif; ?>
         </div>
-        <?php endif; ?>
 
 
         <!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initAutocomplete&libraries=places&v=weekly" defer></script>-->
     </div>
+

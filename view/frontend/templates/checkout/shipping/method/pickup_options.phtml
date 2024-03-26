@@ -15,6 +15,7 @@ use \Magento\Framework\App\ObjectManager;
 $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
 ?>
 
+
 <div>
     <script defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initMap"></script>
@@ -68,7 +69,7 @@ HTML;//                @click=" $wire.set("foo", Math.random()) ">
 
         <div x-data="hyva.modal()">
             <a @click="show" onclick="initMap(<?= htmlentities($testt) ?>)"
-                    aria-haspopup="dialog">
+               aria-haspopup="dialog">
                 Wijzig ophaalpunt
             </a>
             <?= $modalViewModel->createModal()->withContent($contentt)->positionCenter()
@@ -80,5 +81,4 @@ HTML;//                @click=" $wire.set("foo", Math.random()) ">
 
     </div>
 </div>
-
 
