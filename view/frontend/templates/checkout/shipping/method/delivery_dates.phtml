@@ -69,11 +69,7 @@ use \Magento\Framework\App\ObjectManager;
         <!--<div wire:ignore>-->
         <div>
             <?php if (($magewire->userSelectedShipperCode != null || $magewire->userSelectedShipperCode != '')): ?>
-                <?= $block->getChildHtml('monta_delivery_monta_delivery-options-selected-overview') ?>
-            <?php elseif (($magewire->userSelectedShipperCode != null || $magewire->userSelectedShipperCode != '')): ?>
                 <?= $block->getChildHtml('monta_delivery_monta_pickup-options-selected-overview') ?>
-                <!--            --><?php //elseif ($magewire->type == 'pickup'): ?>
-                <!--                --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
             <?php endif; ?>
         </div>
 
