@@ -50,7 +50,7 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
         <?php
         $contentt = <<<HTML
 <h3 id="selectedShipperText">selected shipper</h3>
-    <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Select shipper</button>
+
 <div class="flex flex-row">
     <div id="map" style="height: 500px; width: 500px;"></div>
 <ul>
@@ -58,7 +58,7 @@ HTML;//                @click=" $wire.set("foo", Math.random()) ">
         foreach ($magewire->pickupOptions as $pickup) {
             $contentt .= '
         <li id="' . $pickup['code'] . '" class=""
-        @click="pickupSelected(' . $pickup['code'] . ');";
+        wire:click="pickupSelectedFromMaps(' . $pickup['code'] . ');";
         >
             ' . $pickup['company'] .
                 '</li>';
