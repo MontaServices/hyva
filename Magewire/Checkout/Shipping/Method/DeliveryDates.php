@@ -72,7 +72,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->type = self::TYPE_DELIVERY;
         $this->userSelectedShipperCode = null;
 
-        if(!isset($this->result) ||   !is_array($this->result['DeliveryOptions'])) {
+        if(!is_array($this->result['DeliveryOptions'])) {
             return;
         }
 
@@ -313,8 +313,8 @@ class DeliveryDates extends Component implements EvaluationInterface
         ];
 
         $address = $this->checkoutSession->getQuote()->getShippingAddress();
-            $address->setMontapackingMontacheckoutData();
-            $address->save();
+        $address->setMontapackingMontacheckoutData();
+        $address->save();
 
         // ToDO: Check if item exists in the list of given shippers. If not, don't set the value
         // $this->userSelectedShipperCode = $shipperCode;
@@ -332,7 +332,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $pickup = null;
         foreach($this->result['PickupOptions'] as $item) {
             if($item->code == $pickupCode) {
-                 $pickup = $item;
+                $pickup = $item;
             }
         }
 
