@@ -11,6 +11,9 @@ class DeliveryOptions extends Component
     public $deliveryOptionsForSelectedDate = [];
     public $userSelectedShipperOptions = [];
 
+    public $selectedDate = null;
+    public $showSelectedDate = true;
+
     protected $listeners = [
         'monta_delivery_button_selected' => 'init'
     ];
@@ -43,6 +46,16 @@ class DeliveryOptions extends Component
 
     public function setSelectedDate($date)
     {
+        if($this->selectedDate == $date){
+            $this->showSelectedDate = !$this->showSelectedDate;
+            $this->deliveryOptionsForSelectedDate = [];
+        }else{
+            $this->showSelectedDate = true;
+        }
+        if(!$this->showSelectedDate){
+            return [];
+        }
+
         foreach ($this->deliveryOptions as $item) {
             // Check if the attribute exists and has the desired value
 
@@ -52,6 +65,8 @@ class DeliveryOptions extends Component
 
             if (isset($item['date']) && $item['date'] === $date) {
                 $this->deliveryOptionsForSelectedDate = $item['options'];
+                $this->selectedDate = $date;
+                $this->showSelectedDate = true;
                 return $item;
             }
         }

@@ -20,45 +20,20 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
     <script defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initMap"></script>
     <div class="container">
-        <div class="flex flex-col mt-4 space-y-2">
-            <?php if (isset($magewire->pickupOptions) && count($magewire->pickupOptions) > 0): ?>
-                <?php $pickup = $magewire->pickupOptions[0] ?>
-                <div class="flex-item p-2 items-center">
-                    <div class="flex flex-row">
-                        <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= $magewire->pickupOptions[0]['displayName'] ?></h3>
-                        <div class=items-center"><?= $magewire->pickupOptions[0]['priceFormatted'] ?></div>
-                    </div>
-                    <div class="flex flex-row">
-                        <span><?= $pickup['street'] ?> <?= $magewire->pickupOptions[0]['company'] ?> <?= $magewire->pickupOptions[0]['distanceMeters'] / 1000 ?> km</span>
-                    </div>
-                    <div class="flex flex-row">
-                        <span><?= $pickup['street'] ?> <?= $pickup['houseNumber'] ?></span>
-                    </div>
-                    <div class="flex flex-row">
-                        <span><?= $pickup['postalCode'] ?> <?= $pickup['city'] ?> (<?= $pickup['countryCode'] ?>)</span>
-                    </div>
-                    <!--                    <button class="btn btn-primary btn-next"-->
-                    <!--                            wire:click="choosePickupButtonClicked('-->
-                    <?php //= $pickup['code'] ?><!--')">Kies verzender-->
-                    <!--                    </button>-->
-                </div>
-
-            <?php endif; ?>
-        </div>
         <?php $testt = json_encode($magewire->pickupOptions) ?>
 
         <?php
         $contentt = <<<HTML
-        <h3 id="selectedShipperText">selected shipper</h3>
+
             <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Select shipper</button>
         <div class="flex flex-row">
             <div id="map" style="height: 500px; width: 500px;"></div>
         <ul>
         HTML;//                @click=" $wire.set("foo", Math.random()) ">
-        foreach($magewire->pickupOptions as $pickup) {
+        foreach ($magewire->pickupOptions as $pickup) {
             $contentt .= '
-                <li id="'.$pickup['code'].'" class=""
-                @click="pickupSelected('. $pickup['code'] .');";
+                <li id="' . $pickup['code'] . '"
+                @click="pickupSelected(' . $pickup['code'] . ');";
                 >
                     ' . $pickup['company'] .
                 '</li>';
@@ -67,9 +42,10 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
         ?>
 
         <div x-data="hyva.modal()">
-            <button @click="show" onclick="initMap(<?= htmlentities($testt) ?>)" type="button" class="btn mt-40" aria-haspopup="dialog">
-                Show Google Maps
-            </button>
+            <a @click="show" onclick="initMap(<?= htmlentities($testt) ?>)" class="p-2"
+                    aria-haspopup="dialog">
+                Wijzig ophaalpunt
+            </a>
             <?= $modalViewModel->createModal()->withContent($contentt)->positionCenter()
                 ->withAriaLabelledby('the-label')
                 ->addDialogClass('border', 'border-10', 'border-blue-800', 'w-1/2', 'h-1/2')
@@ -113,5 +89,5 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
         <!---->
         <!--            }-->
         <!--        </script>-->
-</div>
+    </div>
 

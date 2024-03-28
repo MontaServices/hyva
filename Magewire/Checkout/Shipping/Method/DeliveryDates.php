@@ -28,10 +28,13 @@ class DeliveryDates extends Component implements EvaluationInterface
     public $shouldShowDatePicker = true;
     public $result;
     public $userSelectedShipperCode = null;
+    public $pickupPointSelected = null;
     public $userSelectedShipperOptions = [];
     private $montaApi = null;
 
     public $address = null;
+
+    public $selectedPickupPoint = null;
 
     protected $listeners = [
         'refresh',
@@ -96,11 +99,18 @@ class DeliveryDates extends Component implements EvaluationInterface
     {
         $deliveryArray[] = $this->result['DeliveryOptions'];
         $pickupArray[] = $this->result['PickupOptions'];
+        $initialPickupArray[] = [];
 
         if($this->type == null) {
             $this->type = self::TYPE_DELIVERY;
             $this->emit('monta_pickup_button_selected', $pickupArray);
             $this->emit('monta_delivery_button_selected', $deliveryArray);
+            if($this->pickupPointSelected == null) {
+                $initialPickupArray[] = $this->pickupPointSelected;
+                $this->emit('monta_pickup_option_selected', $pickupArray[0]);
+            }else{
+                $this->emit('monta_pickup_option_selected', $initialPickupArray);
+            }
         }
 
         if($this->type == self::TYPE_DELIVERY) {
@@ -371,6 +381,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $address->save();
 
         $this->invalidateShippingRate();
+        $this->pickupPointSelected = $pickup;
         $this->emit('monta_pickup_option_selected', $pickup);
         $this->emitToRefresh('price-summary.total-segments');
     }
