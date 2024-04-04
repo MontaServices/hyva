@@ -24,7 +24,7 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
 
         <?php
         $contentt = <<<HTML
-
+         <h3 id="selectedShipperText">selected shipper</h3>
             <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Select shipper</button>
         <div class="flex flex-row">
             <div id="map" style="height: 500px; width: 500px;"></div>
@@ -42,10 +42,10 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
         ?>
 
         <div x-data="hyva.modal()">
-            <a @click="show" onclick="initMap(<?= htmlentities($testt) ?>)" class="p-2"
+            <button @click="show" onclick="initMap(<?= htmlentities($testt) ?>)"     class="btn btn-primary btn-next"
                     aria-haspopup="dialog">
                 Wijzig ophaalpunt
-            </a>
+            </button>
             <?= $modalViewModel->createModal()->withContent($contentt)->positionCenter()
                 ->withAriaLabelledby('the-label')
                 ->addDialogClass('border', 'border-10', 'border-blue-800', 'w-1/2', 'h-1/2')

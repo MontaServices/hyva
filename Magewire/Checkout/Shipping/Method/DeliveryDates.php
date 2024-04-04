@@ -34,6 +34,10 @@ class DeliveryDates extends Component implements EvaluationInterface
 
     public $address = null;
 
+    public $allDays = [];
+
+    public $standardShipper = null;
+
     public $selectedPickupPoint = null;
 
     protected $listeners = [
@@ -62,9 +66,8 @@ class DeliveryDates extends Component implements EvaluationInterface
 
     public function evaluateCompletion(EvaluationResultFactory $resultFactory): EvaluationResultInterface
     {
-        if($this->userSelectedShipperCode == null)
-        {
-            return $resultFactory->createErrorMessage((string) __('Please select a shipper before continuing'));
+        if ($this->userSelectedShipperCode == null) {
+            return $resultFactory->createErrorMessage((string)__('Please select a shipper before continuing'));
         }
 
         return $resultFactory->createSuccess();
@@ -75,7 +78,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->type = self::TYPE_DELIVERY;
         $this->userSelectedShipperCode = null;
 
-        if(!is_array($this->result['DeliveryOptions'])) {
+        if (!is_array($this->result['DeliveryOptions'])) {
             return;
         }
 
@@ -88,7 +91,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->type = self::TYPE_PICKUP;
         $this->userSelectedShipperCode = null;
 
-        if(!is_array($this->result['PickupOptions'])) {
+        if (!is_array($this->result['PickupOptions'])) {
             return;
         }
 
@@ -101,19 +104,20 @@ class DeliveryDates extends Component implements EvaluationInterface
         $pickupArray[] = $this->result['PickupOptions'];
         $initialPickupArray[] = [];
 
-        if($this->type == null) {
+        if ($this->type == null) {
             $this->type = self::TYPE_DELIVERY;
             $this->emit('monta_pickup_button_selected', $pickupArray);
             $this->emit('monta_delivery_button_selected', $deliveryArray);
-            if($this->pickupPointSelected == null) {
+            $this->emit('monta_delivery_button_selected_alldays', json_encode($this->allDays));
+            if ($this->pickupPointSelected == null) {
                 $initialPickupArray[] = $this->pickupPointSelected;
                 $this->emit('monta_pickup_option_selected', $pickupArray[0]);
-            }else{
+            } else {
                 $this->emit('monta_pickup_option_selected', $initialPickupArray);
             }
         }
 
-        if($this->type == self::TYPE_DELIVERY) {
+        if ($this->type == self::TYPE_DELIVERY) {
             $this->emit('monta_delivery_button_selected', $deliveryArray);
             return;
         }
@@ -135,18 +139,18 @@ class DeliveryDates extends Component implements EvaluationInterface
 
     public function boot(): void
     {
-        $webshop                = $this->getCarrierConfig()->getWebshop();
-        $username               = $this->getCarrierConfig()->getUserName();
-        $password               = $this->getCarrierConfig()->getPassword();
-        $pickupPointsEnabled    = !$this->getCarrierConfig()->getDisablePickupPoints();
-        $maxPickupPoints        = $this->getCarrierConfig()->getMaxPickupPoints() ?? 3;
-        $googleApiKey           = $this->getCarrierConfig()->getGoogleApiKey();
-        $defaultShippingCost    = $this->getCarrierConfig()->getPrice();
-        $isMontaLeading         = $this->getCarrierConfig()->getLeadingStockMontapacking() ?? true;
+        $webshop = $this->getCarrierConfig()->getWebshop();
+        $username = $this->getCarrierConfig()->getUserName();
+        $password = $this->getCarrierConfig()->getPassword();
+        $pickupPointsEnabled = !$this->getCarrierConfig()->getDisablePickupPoints();
+        $maxPickupPoints = $this->getCarrierConfig()->getMaxPickupPoints() ?? 3;
+        $googleApiKey = $this->getCarrierConfig()->getGoogleApiKey();
+        $defaultShippingCost = $this->getCarrierConfig()->getPrice();
+        $isMontaLeading = $this->getCarrierConfig()->getLeadingStockMontapacking() ?? true;
 
-        $deliveryDaysEnabled    = !$this->getCarrierConfig()->getDisableDeliveryDays() ?? true;
+        $deliveryDaysEnabled = !$this->getCarrierConfig()->getDisableDeliveryDays() ?? true;
 
-        if($webshop == null) {
+        if ($webshop == null) {
             throw new \Exception("Configuration error");
         }
 
@@ -173,21 +177,21 @@ class DeliveryDates extends Component implements EvaluationInterface
         $lastname = $quote->getShippingAddress()['lastname'];
         $street = $quote->getShippingAddress()['street'];
         $houseNumber = '';
-        $city  = $quote->getShippingAddress()['city'];
+        $city = $quote->getShippingAddress()['city'];
         $region = $quote->getShippingAddress()['region'];
         $postal = $quote->getShippingAddress()['postcode'];
         $hmm = $quote->getShippingAddress();
         $streetArray = explode("\n", $street);
 
-        if(!isset($streetArray[0])) {
+        if (!isset($streetArray[0])) {
             $street = '';
         }
 
-        if(!isset($streetArray[1])) {
+        if (!isset($streetArray[1])) {
             $houseNumber = '';
         }
 
-        if(!isset($street) || !isset($postal) || !isset($city) || !isset($region)) {
+        if (!isset($street) || !isset($postal) || !isset($city) || !isset($region)) {
             return;
         }
 
@@ -202,8 +206,8 @@ class DeliveryDates extends Component implements EvaluationInterface
 
         $bAllProductsAvailable = true;
 
-        foreach($cart as $item) {
-            if($isMontaLeading) {
+        foreach ($cart as $item) {
+            if ($isMontaLeading) {
                 $this->montaApi->addProduct(sku: $item->getSku(), quantity: $item->getQty(), price: $item->getPrice());
             } else {
                 $stockItem = $item->getProduct()->getExtensionAttributes()->getStockItem();
@@ -220,16 +224,26 @@ class DeliveryDates extends Component implements EvaluationInterface
         /** End price calculation */
 
 
-
-
         $result = $this->montaApi->getShippingOptions(true);
         $this->result = $result;
         $this->checkoutSession->setAllDeliveryOptions($this->result['DeliveryOptions']);
         $this->checkoutSession->setAllPickupOptions($this->result['PickupOptions']);
-
-
+        $this->standardShipper = $result['StandardShipper'];
+        self::GetAllDays($this->result);
 
         $this->emitTypeEvent();
+    }
+
+
+    public function GetAllDays($result): void
+    {
+        foreach ($result['DeliveryOptions'] as $deliveryOption) {
+            if ($deliveryOption->dateOnlyFormatted != "") {
+//                (object) array('slug' => 'xxx', 'title' => 'etc')
+                array_push($this->allDays, array('day' => substr($deliveryOption->day, 0, 2), 'test' => 'test'));
+//                array_push($this->allDays, array('day' => substr($deliveryOption->day,0,2), 'date'=> $deliveryOption->date));
+            }
+        }
     }
 
     public function mounted(): void
@@ -254,18 +268,51 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->shouldShowDatePicker = $this->shouldShowDatePicker();
     }
 
+    public function shipperStandardSelected(){
+        $magic['type'] = 'delivery';
+        $magic['details'] = [
+            [
+                'short_code' => implode(",", $this->standardShipper['shipperCodes']),
+            ]
+        ];
+        $magic['additional_info'] = [
+            [
+                'code' => $this->standardShipper['code'],
+                'name' => $this->standardShipper['shipper'],
+                'price' => $this->standardShipper['price'],
+                'total_price' => $this->standardShipper['price'],
+            ]
+        ];
+
+        $address = $this->checkoutSession->getQuote()->getShippingAddress();
+        $address->setMontapackingMontacheckoutData();
+        $address->save();
+
+        // ToDO: Check if item exists in the list of given shippers. If not, don't set the value
+        // $this->userSelectedShipperCode = $shipperCode;
+
+        $this->invalidateShippingRate();
+//        $this->emit('monta_delivery_option_selected', $shipperData);
+        $this->emitToRefresh('price-summary.total-segments');
+    }
+
     public function shipperSelected($shipperCode, $deliveryOptions)
     {
         $this->userSelectedShipperCode = $shipperCode;
         $this->checkoutSession->setSelectedShipperCode($shipperCode);
 
-        $shipperData = $this->getShipperByShipperCode($shipperCode, $this->result['DeliveryOptions']);
-        $shipperDataDate = $this->getShipperDateByShipperCode($shipperCode, $this->result['DeliveryOptions']);
+        if ($shipperCode) {
+            $shipperData = $this->standardShipper;
+//            $shipperDataDate = $this->standardShipper->date;
+        } else {
+            $shipperData = $this->getShipperByShipperCode($shipperCode, $this->result['DeliveryOptions']);
+            $shipperDataDate = $this->getShipperDateByShipperCode($shipperCode, $this->result['DeliveryOptions']);
+        }
 
         $deliveryOptionsFlattened = [];
-        foreach($deliveryOptions as $givenOptions) {
-            foreach($shipperData->deliveryOptions as $code) {
-                if($givenOptions == $code->code) {
+        foreach ($deliveryOptions as $givenOptions) {
+            foreach ($shipperData->deliveryOptions as $code) {
+                if ($givenOptions == $code->code) {
                     $deliveryOptionsFlattened[] = $code->code;
                     $deliveryOptionsFlattened = array_unique($deliveryOptionsFlattened);
                 }
@@ -315,8 +362,8 @@ class DeliveryDates extends Component implements EvaluationInterface
             [
                 'code' => $shipperData->code,
                 'name' => $shipperData->shipper,
-                'date' => $shipperDataDate,
-                'time' => $shipperData->from . '-' . $shipperData->to,
+//                'date' => $shipperDataDate,
+//                'time' => $shipperData->from . '-' . $shipperData->to,
                 'price' => $shipperData->price,
                 'total_price' => '10.00',
             ]
@@ -340,13 +387,13 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->checkoutSession->setSelectedShipperCode($pickupCode);
 
         $pickup = null;
-        foreach($this->result['PickupOptions'] as $item) {
-            if($item->code == $pickupCode) {
+        foreach ($this->result['PickupOptions'] as $item) {
+            if ($item->code == $pickupCode) {
                 $pickup = $item;
             }
         }
 
-        if($pickup == null) {
+        if ($pickup == null) {
             return;
         }
 
@@ -372,7 +419,7 @@ class DeliveryDates extends Component implements EvaluationInterface
                 'price' => $pickup->price,
                 'country' => $pickup->countryCode,
 //                'total_price' =>  number_format($pickup->price, 2, '.', ''),
-                'total_price' =>  '10.00',
+                'total_price' => '10.00',
             ]
         ];
 
@@ -408,7 +455,7 @@ class DeliveryDates extends Component implements EvaluationInterface
 
     public function init()
     {
-        $this->emitUp('dataToParent',['user_ids'=>[1,2,3]]);
+        $this->emitUp('dataToParent', ['user_ids' => [1, 2, 3]]);
     }
 
     /**
@@ -418,11 +465,11 @@ class DeliveryDates extends Component implements EvaluationInterface
      * @param $shippersArray
      * @return ShippingOption|null
      */
-    private function getShipperByShipperCode(string $searchShipperCode, $shippersArray) : ?ShippingOption
+    private function getShipperByShipperCode(string $searchShipperCode, $shippersArray): ?ShippingOption
     {
-        foreach($shippersArray as $key => $shipperDay) {
+        foreach ($shippersArray as $key => $shipperDay) {
             foreach ($shipperDay->options as $option) {
-                if($option->code == $searchShipperCode) {
+                if ($option->code == $searchShipperCode) {
                     return $option;
                 }
             }
@@ -438,9 +485,9 @@ class DeliveryDates extends Component implements EvaluationInterface
      */
     private function getShipperDateByShipperCode(string $searchShipperCode, $shippersArray)
     {
-        foreach($shippersArray as $key => $shipperDay) {
+        foreach ($shippersArray as $key => $shipperDay) {
             foreach ($shipperDay->options as $option) {
-                if($option->code == $searchShipperCode) {
+                if ($option->code == $searchShipperCode) {
                     return $shipperDay->date;
                 }
             }

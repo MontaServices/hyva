@@ -45,6 +45,9 @@ use Magento\Framework\View\Element\Template;
                              wire:click="getOpeningsTijd('<?= $code ?>')">Toon
                             openingstijden
                         </div>
+                        <button class="btn btn-primary btn-next"
+                             wire:click="choosePickupButtonClicked('<?= $code ?>')">Kies deze ophaalpunt
+                        </button>
                     </div>
                 </div>
 

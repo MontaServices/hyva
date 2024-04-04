@@ -19,10 +19,11 @@ use Magento\Framework\View\Element\Template;
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
+
     /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
     }
 
 </style>
@@ -66,7 +67,7 @@ use Magento\Framework\View\Element\Template;
     }
 
     // ToDO: Create function here
-    function addMarker(latitude, longitude, ) {
+    function addMarker(latitude, longitude,) {
 
     }
 
@@ -85,7 +86,7 @@ use Magento\Framework\View\Element\Template;
     }
 
     function pickupSelected(pickupCode) {
-        if(pickupCode == null) {
+        if (pickupCode == null) {
             return;
         }
 
@@ -106,5 +107,63 @@ use Magento\Framework\View\Element\Template;
         console.log(`Checkout Step: ${event.detail.route}, Request Type: ${requestType}`);
     }, {once: true})
 
+    function moveLeft() {
+        const movementCalc = Math.floor(Math.min(500 * (window.innerWidth / 700), 500));
+        const slider = document.getElementById('datepicker');
+        slider.scrollTo({
+            top: 0,
+            left: Math.max(slider.scrollLeft - movementCalc, 0),
+            behavior: 'smooth'
+        });
+    }
 
+    function moveRight() {
+        const movementCalc = Math.floor(Math.min(500 * (window.innerWidth / 700), 500));
+        const slider = document.getElementById('datepicker');
+
+        slider.scrollTo({
+            top: 0,
+            left: Math.min(slider.scrollLeft + movementCalc, document.getElementById('datepicker').scrollWidth),
+            behavior: 'smooth'
+        });
+    }
+
+
+    // function kleuren(index){
+    //     debugger;
+    //     var items = document.getElementsByClassName("testclasses");
+    //     Array.prototype.forEach.call(items, element => {
+    //         element.style.backgroundColor = "white";
+    //     });
+    //
+    //     const query  =".testclasses:nth-child(" + (index) + ")";
+    //     var datepickerElement = document.querySelectorAll(query)[0];
+    //     datepickerElement.style.backgroundColor = "green";
+    // }
+    //
+    // function updateCss(index) {
+    //
+    //    // items.forEach(update);
+    //
+    //
+    //     Array.prototype.forEach.call(items, element => {
+    //         element.style.backgroundColor = "white";
+    //     });
+    //
+    //     debugger;
+    //     const query  ="#datepicker .test:nth-child(" + index + ")";
+    //     var datepickerElement = document.querySelectorAll(query)[0];
+    //
+    //     // var datepicker = document.getElementById("datepicker");
+    //     datepickerElement.style.backgroundColor = "green";
+    //
+    //     // var update = function(element){
+    //     //     element.style.backgroundColor = "green";
+    //     // }
+    //
+    //     // e = e || window.event;
+    //     // var target = e.target || e.srcElement,
+    //     //     text = target.textContent || target.innerText;
+    //
+    // }
 </script>

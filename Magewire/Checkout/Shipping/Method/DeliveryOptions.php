@@ -8,25 +8,63 @@ use Magewirephp\Magewire\Component;
 class DeliveryOptions extends Component
 {
     public $deliveryOptions = [];
+    public $standardOptions = null;
     public $deliveryOptionsForSelectedDate = [];
     public $userSelectedShipperOptions = [];
 
     public $selectedDate = null;
     public $showSelectedDate = true;
 
+    public $allDays = [];
+
     protected $listeners = [
-        'monta_delivery_button_selected' => 'init'
+        'monta_delivery_button_selected' => 'init',
+        'monta_delivery_button_selected_alldays' => 'allDays'
     ];
 
     protected $loader = 'Loading...';
 
     public function init($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             return;
         }
 
         $this->deliveryOptions = $data;
+
+//        foreach ($this->deliveryOptions as $deliveryOption){
+//            if($deliveryOption['dateOnlyFormatted'] != "") {
+////                (object) array('slug' => 'xxx', 'title' => 'etc')
+////                array_push($this->allDays, array('day' => substr($deliveryOption->day,0,2), 'test'=>'test'));
+//                array_push($this->allDays, array('day' => substr($deliveryOption['day'],0,2), 'date'=> $deliveryOption['date']));
+//            }
+//        }
+
+
+        $this->allDays = array_map(function ($deliveryOption) {
+            if ($deliveryOption['dateOnlyFormatted'] != "") {
+                return array('day' => substr($deliveryOption['day'], 0, 2), 'date' => $deliveryOption['date']);
+            }else{
+                return [];
+            }
+        }, $this->deliveryOptions);
+
+        $this->allDays = array_filter($this->allDays, function($k) {
+            return count($k) != 0;
+        });
+
+        $this->allDays = array_slice($this->allDays, 0, 6);
+//        function handle()
+//        {
+//            $failDetail = [['id' => 1], ['id' => 2]];
+//            $result = array_map(function ($v) {
+//                return implode(' ', $v);
+//            }, $failDetail);
+//        }
+
+//        $testje = json_decode($data);
+//        $test = $$testje->0->day;
+
 
 //        if(count($this->deliveryOptionsForSelectedDate) == 0) {
 //            $this->setSelectedDate($this->deliveryOptions[0]['date']);
@@ -34,32 +72,47 @@ class DeliveryOptions extends Component
 
     }
 
+    function testfunction($deliveryOption): array
+    {
+        return array('day' => substr($deliveryOption['day'], 0, 2), 'date' => $deliveryOption['date']);
+    }
+
     public function __construct(CheckoutSession $checkoutSession)
     {
         $this->checkoutSession = $checkoutSession;
     }
 
-    public function boot(): void
+    public
+    function allDays($data)
+    {
+        $this->allDays = json_decode($data);
+//        $testje = json_decode($data);
+//        $test = $$testje->0->day;
+    }
+
+    public
+    function boot(): void
     {
 
     }
 
-    public function setSelectedDate($date)
+    public
+    function setSelectedDate($date)
     {
-        if($this->selectedDate == $date){
+        if ($this->selectedDate == $date) {
             $this->showSelectedDate = !$this->showSelectedDate;
             $this->deliveryOptionsForSelectedDate = [];
-        }else{
+        } else {
             $this->showSelectedDate = true;
         }
-        if(!$this->showSelectedDate){
+        if (!$this->showSelectedDate) {
             return [];
         }
 
         foreach ($this->deliveryOptions as $item) {
             // Check if the attribute exists and has the desired value
 
-            if($date == null) {
+            if ($date == null) {
                 $this->deliveryOptionsForSelectedDate = $item['options'];
             }
 
@@ -74,12 +127,14 @@ class DeliveryOptions extends Component
         return [];
     }
 
-    public function chooseShipperButtonClicked(string $shipperCode)
+    public
+    function chooseShipperButtonClicked(string $shipperCode)
     {
         $this->emit('monta_shipper_selected', $shipperCode, $this->userSelectedShipperOptions);
     }
 
-    public function shipperOptionClicked($optionCode)
+    public
+    function shipperOptionClicked($optionCode)
     {
 //        foreach($this->deliveryOptions as $deliveryOption) {
 //            foreach($deliveryOption['options'] as $options) {
@@ -88,12 +143,12 @@ class DeliveryOptions extends Component
 //            }
 //        }
 
-        if(in_array($optionCode, $this->userSelectedShipperOptions)) {
+        if (in_array($optionCode, $this->userSelectedShipperOptions)) {
             $to_remove = array($optionCode);
 
 //            $whee = array_diff($this->userSelectedShipperOptions, $to_remove);
 
-            $this->userSelectedShipperOptions =  array_diff($this->userSelectedShipperOptions, $to_remove);
+            $this->userSelectedShipperOptions = array_diff($this->userSelectedShipperOptions, $to_remove);
             return;
         }
 
