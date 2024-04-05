@@ -54,6 +54,7 @@ class DeliveryDates extends Component implements EvaluationInterface
 
         'monta_shipper_selected' => 'shipperSelected',
         'monta_pickup_selected' => 'PickupSelected',
+        'resetShipperOption' => 'resetShipperOption',
     ];
 
     protected $loader = 'Loading....';
@@ -62,6 +63,10 @@ class DeliveryDates extends Component implements EvaluationInterface
     {
         $this->checkoutSession = $checkoutSession;
         $this->carrierConfig = $carrierConfig;
+    }
+
+    public function resetShipperOption(){
+        $this->userSelectedShipperCode = null;
     }
 
     public function evaluateCompletion(EvaluationResultFactory $resultFactory): EvaluationResultInterface
@@ -109,12 +114,6 @@ class DeliveryDates extends Component implements EvaluationInterface
             $this->emit('monta_pickup_button_selected', $pickupArray);
             $this->emit('monta_delivery_button_selected', $deliveryArray);
             $this->emit('monta_delivery_button_selected_alldays', json_encode($this->allDays));
-            if ($this->pickupPointSelected == null) {
-                $initialPickupArray[] = $this->pickupPointSelected;
-                $this->emit('monta_pickup_option_selected', $pickupArray[0]);
-            } else {
-                $this->emit('monta_pickup_option_selected', $initialPickupArray);
-            }
         }
 
         if ($this->type == self::TYPE_DELIVERY) {
@@ -269,6 +268,7 @@ class DeliveryDates extends Component implements EvaluationInterface
     }
 
     public function shipperStandardSelected(){
+        $this->type = self::TYPE_DELIVERY;
         $magic['type'] = 'delivery';
         $magic['details'] = [
             [
@@ -289,15 +289,16 @@ class DeliveryDates extends Component implements EvaluationInterface
         $address->save();
 
         // ToDO: Check if item exists in the list of given shippers. If not, don't set the value
-        // $this->userSelectedShipperCode = $shipperCode;
+         $this->userSelectedShipperCode = $this->standardShipper['code'];
 
         $this->invalidateShippingRate();
-//        $this->emit('monta_delivery_option_selected', $shipperData);
+        $this->emit('monta_delivery_option_selected', $this->standardShipper);
         $this->emitToRefresh('price-summary.total-segments');
     }
 
     public function shipperSelected($shipperCode, $deliveryOptions)
     {
+        $this->type = self::TYPE_DELIVERY;
         $this->userSelectedShipperCode = $shipperCode;
         $this->checkoutSession->setSelectedShipperCode($shipperCode);
 
@@ -337,7 +338,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $address->save();
 
         // ToDO: Check if item exists in the list of given shippers. If not, don't set the value
-        // $this->userSelectedShipperCode = $shipperCode;
+         $this->userSelectedShipperCode = $shipperCode;
 
         $this->invalidateShippingRate();
         $this->emit('monta_delivery_option_selected', $shipperData);
@@ -346,6 +347,7 @@ class DeliveryDates extends Component implements EvaluationInterface
 
     public function PickupSelected($pickupCode)
     {
+        $this->type = self::TYPE_PICKUP;
         $this->userSelectedShipperCode = $pickupCode;
         $this->checkoutSession->setSelectedShipperCode($pickupCode);
 

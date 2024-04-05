@@ -16,4 +16,8 @@ class DeliveryOptionSelectedOverview extends Component
     {
         $this->selectedDeliveryOption = $data;
     }
+
+    public function resetShipperOption(){
+        $this->emit("resetShipperOption");
+    }
 }

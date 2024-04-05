@@ -15,47 +15,68 @@ use \Magento\Framework\App\ObjectManager;
     <?php if ($magewire->shouldShowDatePicker): ?>
 
         <div class="flex flex-col gap-2 ">
-            <?php if ($magewire->standardShipper != null): ?>
-                <?php if (is_array($magewire->standardShipper)): ?>
+            <?php if ($magewire->userSelectedShipperCode == null): ?>
+                <?php if ($magewire->standardShipper != null): ?>
 
-                    <?php $shipper = $magewire->standardShipper ?>
-<!--                    --><?php //var_dump($shipper) ?>
-                    <div tabindex="1"
-                         class="flex  flex-row rounded-lg border-slate-300 border-2  justify-between focus:border-blue-300 p-8">
-                        <div class="basis-2/4 p-6">
-                            Standaard bezorging
-                        </div>
-                        <div class="basis-1/4 p-6">
-                            Uw order wordt bezorgd met
-                        </div>
-                        <div class="basis-1/4 p-6">
-                            <p><?= $shipper['priceFormatted'] ?></p>
-                        </div>
-                        <button class="btn btn-primary btn-next w-1/4"
-                                wire:click="shipperStandardSelected('<?= $shipper['code'] ?>')">Selecteer bezorgoptie
-                        </button>
-                    </div>
+                    <?php if (is_array($magewire->standardShipper)): ?>
 
+                        <?php $shipper = $magewire->standardShipper ?>
+                        <!--                    --><?php //var_dump($shipper) ?>
+                        <div tabindex="1" wire:click="shipperStandardSelected('<?= $shipper['code'] ?>')"
+                             class="flex  flex-row rounded-lg border-slate-300 border-2  justify-between focus:border-blue-300 p-8">
+                            <div class="basis-2/4 p-6">
+                                Standaard bezorging
+                            </div>
+                            <div class="basis-1/4 p-6">
+                                Uw order wordt bezorgd met <?= $shipper['displayName'] ?>
+                            </div>
+                            <div class="basis-1/4 p-6">
+                                <p><?= $shipper['priceFormatted'] ?></p>
+                            </div>
+                        </div>
+
+                    <?php endif; ?>
                 <?php endif; ?>
             <?php endif; ?>
-            <div tabindex="2"
-                 class="flex flex-col  bg-gray-400 rounded-lg border-slate-300 border-2  focus:border-blue-300 p-8">
+            <?php if ($magewire->userSelectedShipperCode == null): ?>
+                <div tabindex="2"
+                     class="flex flex-col  bg-gray-400 rounded-lg border-slate-300 border-2  focus:border-blue-300 p-8">
 
 
-                <div class="flex w-full overflow-x-hidden pb-8">
-                    <?= $block->getChildHtml('monta_delivery_monta_delivery-options') ?>
+                    <div class="flex w-full overflow-x-hidden pb-8">
+                        <?= $block->getChildHtml('monta_delivery_monta_delivery-options') ?>
+                    </div>
                 </div>
-            </div>
 
 
-            <div tabindex="3" class="flex flex-row rounded-lg border-slate-300 border-2 focus:border-blue-300 p-8">
-                <div class="basis-1/2 p-6 bg-slate-transparent focus:bg-slate-400 hover:bg-slate-900">
-                    <?= $block->getChildHtml('monta_delivery_monta_pickup-options-selected-overview') ?>
+            <?php elseif ($magewire->userSelectedShipperCode != null && $magewire->type == 'delivery'): ?>
+                <div tabindex="2"
+                     class="flex flex-col  bg-gray-400 rounded-lg border-slate-300 border-2  focus:border-blue-300 p-8">
+
+                    <div class="flex w-full overflow-x-hidden pb-8">
+                        <?= $block->getChildHtml('monta_delivery_monta_delivery-options-selected-overview') ?>
+                    </div>
                 </div>
-                <div class="basis-1/2">
-                    <?= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
+            <?php endif; ?>
+
+
+
+            <?php if ($magewire->userSelectedShipperCode != null && $magewire->type == 'pickup'): ?>
+                <div tabindex="3" class="flex flex-row rounded-lg border-slate-300 border-2 focus:border-blue-300 p-8">
+
+
+                    <div class="flex w-full p-6 bg-slate-transparent focus:bg-slate-400 hover:bg-slate-900">
+                        <?= $block->getChildHtml('monta_delivery_monta_pickup-options-selected-overview') ?>
+                    </div>
                 </div>
-            </div>
+            <?php elseif ($magewire->userSelectedShipperCode == null): ?>
+                <div tabindex="3" class="flex flex-row rounded-lg border-slate-300 border-2 focus:border-blue-300 p-8">
+
+                    <div class="flex w-full">
+                        <?= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 

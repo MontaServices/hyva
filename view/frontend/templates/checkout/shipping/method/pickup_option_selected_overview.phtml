@@ -45,12 +45,6 @@ use Magento\Framework\View\Element\Template;
                         </a>
                     </div>
                 </div>
-                <?php if (!$magewire->initialPickupChanged): ?>
-                    <button class="btn btn-primary btn-next"
-                            wire:click="choosePickupButtonClicked('<?= $magewire->selectedDeliveryOption['code'] ?>')">
-                        Kies dit ophaalpunt
-                    </button>
-                <?php endif ?>
             </div>
 
 
@@ -68,5 +62,8 @@ use Magento\Framework\View\Element\Template;
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
+        <div>
+            <a wire:click="resetShipperOption()">Klik hier om een andere bezorgoptie te kiezen</a>
+        </div>
     <?php endif; ?>
 </div>

@@ -14,14 +14,14 @@ use Magento\Framework\View\Element\Template;
     <?php if ($magewire->selectedDeliveryOption != null): ?>
 <!--    --><?php //= var_dump($magewire->selectedDeliveryOption) ?>
     <div class="flex flex-col mt-4 space-y-2">
-            <div class="flex-item shadow shadow-md p-2 items-center">
+            <div class="flex-item p-2 items-center">
                 <div class="flex flex-row">
                     <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= '' . $magewire->selectedDeliveryOption['displayName'] ?></h3>
                     <div class= items-center"><?= $magewire->selectedDeliveryOption['priceFormatted'] ?></div>
                 </div>
 
                 <div>
-                    <a href="#">Klik hier om een andere bezorgoptie te kiezen</a>
+                    <a wire:click="resetShipperOption()">Klik hier om een andere bezorgoptie te kiezen</a>
                 </div>
 
 <!--                <div class="mt-4 mb-4">-->

@@ -41,4 +41,8 @@ class PickupOptionSelectedOverview extends Component
         return [];
 
     }
+
+    public function resetShipperOption(){
+        $this->emit("resetShipperOption");
+    }
 }

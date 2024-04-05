@@ -25,8 +25,9 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
         <?php
         $contentt = <<<HTML
          <h3 id="selectedShipperText">selected shipper</h3>
-            <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Select shipper</button>
-        <div class="flex flex-row">
+            <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Selecteer ophaalpunt</button>
+        <div class="flex flex-row justify-between">
+
             <div id="map" style="height: 500px; width: 500px;"></div>
         <ul>
         HTML;//                @click=" $wire.set("foo", Math.random()) ">
@@ -40,11 +41,13 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
         }
         echo '</ul></div>';
         ?>
-
-        <div x-data="hyva.modal()">
-            <button @click="show" onclick="initMap(<?= htmlentities($testt) ?>)"     class="btn btn-primary btn-next m-4"
+        <div x-data="hyva.modal()" class="flex flex-row items-stretch space-x-4 h-100 flex-grow">
+            <div>
+                Ophaalpunt
+            </div>
+            <button @click="show" onclick="initMap(<?= htmlentities($testt) ?>)" class="btn btn-primary btn-next m-4"
                     aria-haspopup="dialog">
-                Wijzig ophaalpunt
+                Kies ophaalpunt
             </button>
             <?= $modalViewModel->createModal()->withContent($contentt)->positionCenter()
                 ->withAriaLabelledby('the-label')
