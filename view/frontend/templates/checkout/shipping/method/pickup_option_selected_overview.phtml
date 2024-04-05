@@ -23,7 +23,7 @@ use Magento\Framework\View\Element\Template;
                     Plaatje
                 </div>
             </div>
-            <div class="flex flex-col space-y-2  p-4">
+            <div class="flex flex-col space-y-2  m-2">
                 <div class="flex-item items-center">
                     <div class="flex flex-row">
                         <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= '' . $magewire->selectedDeliveryOption['company'] ?></h3>
@@ -38,23 +38,20 @@ use Magento\Framework\View\Element\Template;
                     </div>
 
                     <div>
-                        <?= $code = $magewire->selectedDeliveryOption['code'] ?>
+                        <?php $code = $magewire->selectedDeliveryOption['code'] ?>
 
-
-                        <div tabindex="2"
-                             wire:click="getOpeningsTijd('<?= $code ?>')">Toon
+                        <a wire:click="getOpeningsTijd('<?= $code ?>')">Toon
                             openingstijden
-                        </div>
-                        <button class="btn btn-primary btn-next"
-                             wire:click="choosePickupButtonClicked('<?= $code ?>')">Kies deze ophaalpunt
-                        </button>
+                        </a>
                     </div>
                 </div>
-
-
+                <?php if (!$magewire->initialPickupChanged): ?>
+                    <button class="btn btn-primary btn-next"
+                            wire:click="choosePickupButtonClicked('<?= $magewire->selectedDeliveryOption['code'] ?>')">
+                        Kies dit ophaalpunt
+                    </button>
+                <?php endif ?>
             </div>
-
-
 
 
         </div>
@@ -70,6 +67,6 @@ use Magento\Framework\View\Element\Template;
                     </div>
                 <?php endforeach; ?>
             </div>
-        <?php endif;?>
+        <?php endif; ?>
     <?php endif; ?>
 </div>

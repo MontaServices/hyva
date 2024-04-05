@@ -31,7 +31,7 @@ use \Magento\Framework\App\ObjectManager;
                         <div class="basis-1/4 p-6">
                             <p><?= $shipper['priceFormatted'] ?></p>
                         </div>
-                        <button class="btn btn-primary btn-next"
+                        <button class="btn btn-primary btn-next w-1/4"
                                 wire:click="shipperStandardSelected('<?= $shipper['code'] ?>')">Selecteer bezorgoptie
                         </button>
                     </div>
@@ -49,34 +49,14 @@ use \Magento\Framework\App\ObjectManager;
 
 
             <div tabindex="3" class="flex flex-row rounded-lg border-slate-300 border-2 focus:border-blue-300 p-8">
-                <!--        --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
                 <div class="basis-1/2 p-6 bg-slate-transparent focus:bg-slate-400 hover:bg-slate-900">
-
                     <?= $block->getChildHtml('monta_delivery_monta_pickup-options-selected-overview') ?>
-
-
                 </div>
                 <div class="basis-1/2">
                     <?= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
                 </div>
-                <!--    <div>-->
-                <!--        <p class="p-6" wire:click="pickupButtonClicked()">Wijzig ophaalpunt</p>-->
-                <!---->
-                <!--            --><?php //= $block->getChildHtml('monta_delivery_monta_pickup-options') ?>
-                <!--    </div>-->
-
             </div>
         </div>
     <?php endif; ?>
-    <!---->
-    <!--    <div class="flex mb-4">-->
-    <!--        <button wire:click="deliveryButtonClicked()" class="btn btn-primary btn-next h-16">-->
-    <!--            Bezorgen123-->
-    <!--        </button>-->
-    <!---->
-    <!--        <button wire:click="pickupButtonClicked()" class="btn btn-primary btn-next">-->
-    <!--            Afhalen-->
-    <!--        </button>-->
-    <!--    </div>-->
 
 

@@ -32,43 +32,23 @@ class DeliveryOptions extends Component
 
         $this->deliveryOptions = $data;
 
-//        foreach ($this->deliveryOptions as $deliveryOption){
-//            if($deliveryOption['dateOnlyFormatted'] != "") {
-////                (object) array('slug' => 'xxx', 'title' => 'etc')
-////                array_push($this->allDays, array('day' => substr($deliveryOption->day,0,2), 'test'=>'test'));
-//                array_push($this->allDays, array('day' => substr($deliveryOption['day'],0,2), 'date'=> $deliveryOption['date']));
-//            }
-//        }
-
+        if (count($this->deliveryOptions) == 1) {
+            $this->setSelectedDate($this->deliveryOptions[0]['date']);
+        }
 
         $this->allDays = array_map(function ($deliveryOption) {
             if ($deliveryOption['dateOnlyFormatted'] != "") {
                 return array('day' => substr($deliveryOption['day'], 0, 2), 'date' => $deliveryOption['date']);
-            }else{
+            } else {
                 return [];
             }
         }, $this->deliveryOptions);
 
-        $this->allDays = array_filter($this->allDays, function($k) {
+        $this->allDays = array_filter($this->allDays, function ($k) {
             return count($k) != 0;
         });
 
         $this->allDays = array_slice($this->allDays, 0, 6);
-//        function handle()
-//        {
-//            $failDetail = [['id' => 1], ['id' => 2]];
-//            $result = array_map(function ($v) {
-//                return implode(' ', $v);
-//            }, $failDetail);
-//        }
-
-//        $testje = json_decode($data);
-//        $test = $$testje->0->day;
-
-
-//        if(count($this->deliveryOptionsForSelectedDate) == 0) {
-//            $this->setSelectedDate($this->deliveryOptions[0]['date']);
-//        }
 
     }
 
@@ -90,14 +70,12 @@ class DeliveryOptions extends Component
 //        $test = $$testje->0->day;
     }
 
-    public
-    function boot(): void
+    public function boot(): void
     {
 
     }
 
-    public
-    function setSelectedDate($date)
+    public function setSelectedDate($date)
     {
         if ($this->selectedDate == $date) {
             $this->showSelectedDate = !$this->showSelectedDate;

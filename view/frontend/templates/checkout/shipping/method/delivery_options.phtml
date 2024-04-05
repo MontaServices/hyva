@@ -19,26 +19,26 @@ use \Magento\Framework\App\ObjectManager;
             <div class="basis-1/2 p-6 focus:bg-slate-400 hover:bg-slate-900">
                 Kies zelf je bezorgdatum
             </div>
-<!--            --><?php //= var_dump($magewire->allDays) ?>
-
-            <div class="flex">
-                <?php if (isset($magewire->allDays)): ?>
-                    <?php if (count($magewire->allDays) > 0): ?>
-                        <?php foreach ($magewire->allDays as $key=>$item): ?>
-                            <div tabindex="1" wire:click="setSelectedDate('<?= $item['date'] ?>')"
-                                 class="testclasses flex justify-center items center bg-regal-blue m-2 w-10 h-10 justify-content-center rounded-full border-2 focus:border-blue-300 <?= ($magewire->selectedDate == $item['date']) ? 'p-8' : 'p-2' ?>">
-<!--                                --><?php //= var_dump($item) ?>
-                                <p><?= $item['day'] ?></p>
-                            </div>
-                        <?php endforeach; ?>
+            <?php if (count($magewire->deliveryOptions) > 1): ?>
+                <div class="flex">
+                    <?php if (isset($magewire->allDays)): ?>
+                        <?php if (count($magewire->allDays) > 0): ?>
+                            <?php foreach ($magewire->allDays as $key => $item): ?>
+                                <div tabindex="1" wire:click="setSelectedDate('<?= $item['date'] ?>')"
+                                     class="testclasses flex justify-center items center bg-regal-blue m-2 w-10 h-10 justify-content-center rounded-full border-2 focus:border-blue-300 <?= ($magewire->selectedDate == $item['date']) ? 'p-8' : 'p-2' ?>">
+                                    <!--                                --><?php //= var_dump($item) ?>
+                                    <p><?= $item['day'] ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                     stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
-                </svg>
-            </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
+                    </svg>
+                </div>
+            <?php endif; ?>
 
         </div>
 
@@ -46,42 +46,44 @@ use \Magento\Framework\App\ObjectManager;
         <div class="flex flex-row justify-between">
             <!-- Left Button -->
             <?php if (isset($magewire->deliveryOptions)): ?>
-            <?php if (count($magewire->deliveryOptions) > 1): ?>
-                <div class="flex flex-col justify-center w-10">
+                <?php if (count($magewire->deliveryOptions) > 1): ?>
+                    <div class="flex flex-col justify-center w-10">
 
-                    <button class="w-1 border-solid border-2 border-sky-500 h-16" onclick="moveLeft()"> <</button>
-                </div>
+                        <button class="w-1 border-solid border-2 border-sky-500 h-16" onclick="moveLeft()"> <</button>
+                    </div>
 
-            <?php endif; ?>
-            <!-- Items -->
-            <div class="flex flex-row items-stretch space-x-4 w-80 h-100 p-10 flex-grow overflow-x-scroll no-scrollbar "
-                 id="datepicker">
-                <?php foreach ($magewire->deliveryOptions as $key => $item): ?>
-                    <?php if ($item['dateFormatted'] != ''): ?>
-                        <div tabindex="1"
-                             wire:click="setSelectedDate('<?= $item['date'] ?>')"
-                             class="test w-80 min-w-80 border-solid border-2 focus:border-blue-900 h-20 m-10 rounded-lg  date-picker-div <?= ($magewire->selectedDate == $item['date']) ? 'p-8' : 'p-6' ?>">
-                            <p class="font-bold"><?= $item['day'] ?></p>
-                            <p><?= $item['dateOnlyFormatted'] ?></p>
 
-                            <span><?= $item['options'][0]['from'] ?> <?= $item['options'][0]['to'] ?></span>
-                            <p><?= $item['options'][0]['priceFormatted'] ?></p>
+                    <!-- Items -->
+                    <div
+                        class="flex flex-row items-stretch space-x-4 w-80 h-100 p-10 flex-grow overflow-x-scroll no-scrollbar"
+                        id="datepicker">
+                        <?php foreach ($magewire->deliveryOptions as $key => $item): ?>
+                            <?php if ($item['dateFormatted'] != ''): ?>
+                                <div tabindex="1"
+                                     wire:click="setSelectedDate('<?= $item['date'] ?>')"
+                                     class="test w-80 min-w-80 border-solid border-2 focus:border-blue-900 h-20 m-10 rounded-lg  date-picker-div <?= ($magewire->selectedDate == $item['date']) ? 'p-8' : 'p-6' ?>">
+                                    <p class="font-bold"><?= $item['day'] ?></p>
+                                    <p><?= $item['dateOnlyFormatted'] ?></p>
+
+                                    <span><?= $item['options'][0]['from'] ?> <?= $item['options'][0]['to'] ?></span>
+                                    <p><?= $item['options'][0]['priceFormatted'] ?></p>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach ?>
+                    </div>
+                    <?php if (count($magewire->deliveryOptions) > 1): ?>
+                        <div class="flex flex-col justify-center w-10">
+
+                            <button class="w-1 border-solid border-2 border-sky-500 h-16" onclick="moveRight()"> >
+                            </button>
                         </div>
+
+
                     <?php endif; ?>
-                <?php endforeach ?>
-            </div>
-            <?php if (count($magewire->deliveryOptions) > 1): ?>
-                <div class="flex flex-col justify-center w-10">
-
-                    <button class="w-1 border-solid border-2 border-sky-500 h-16" onclick="moveRight()"> ></button>
-                </div>
-
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>
-
-
-    <?php endif; ?>
 
 
     <!-- Right Button -->
@@ -91,13 +93,15 @@ use \Magento\Framework\App\ObjectManager;
         <?php foreach ($magewire->deliveryOptionsForSelectedDate as $delivery): ?>
             <!--                <div class="md:container md:mx-auto">test</div>-->
             <div class="flex-item  p-2 items-center border-2 border-blue-300 rounded-lg ">
-                <div class="flex flex-row justify-between">
+                <div class="flex flex-row justify-between m-2">
                     <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= $delivery['displayName'] ?></h3>
                     <div class=items-center"><?= $delivery['priceFormatted'] ?></div>
                 </div>
-                <div class="mt-4 mb-4">
-                    Kies uw gewenste extra opties
-                </div>
+                <?php if (count($delivery['deliveryOptions']) > 0): ?>
+                    <div class="mt-4 mb-4">
+                        Kies uw gewenste extra opties
+                    </div>
+                <?php endif; ?>
                 <?php foreach ($delivery['deliveryOptions'] as $options): ?>
                     <div class="flex items-center mb-4">
                         <input wire:click="shipperOptionClicked('<?= $options['code'] ?>')"
