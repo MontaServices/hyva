@@ -301,55 +301,18 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->userSelectedShipperCode = $shipperCode;
         $this->checkoutSession->setSelectedShipperCode($shipperCode);
 
-        if ($shipperCode) {
-            $shipperData = $this->standardShipper;
-//            $shipperDataDate = $this->standardShipper->date;
-        } else {
-            $shipperData = $this->getShipperByShipperCode($shipperCode, $this->result['DeliveryOptions']);
-            $shipperDataDate = $this->getShipperDateByShipperCode($shipperCode, $this->result['DeliveryOptions']);
-        }
+        $shipperData = $this->getShipperByShipperCode($shipperCode, $this->result['DeliveryOptions']);
+        $shipperDataDate = $this->getShipperDateByShipperCode($shipperCode, $this->result['DeliveryOptions']);
 
         $deliveryOptionsFlattened = [];
-        foreach ($deliveryOptions as $givenOptions) {
-            foreach ($shipperData->deliveryOptions as $code) {
-                if ($givenOptions == $code->code) {
+        foreach($deliveryOptions as $givenOptions) {
+            foreach($shipperData->deliveryOptions as $code) {
+                if($givenOptions == $code->code) {
                     $deliveryOptionsFlattened[] = $code->code;
                     $deliveryOptionsFlattened = array_unique($deliveryOptionsFlattened);
                 }
             }
         }
-
-        /** begin price calculation */
-//        $cart = $this->checkoutSession->getQuote()->getAllVisibleItems();
-//        $priceIncl = $this->checkoutSession->getQuote()->getTotals()['subtotal']->getData()['value'];
-//        $priceExcl = $this->checkoutSession->getQuote()->getTotals()['subtotal']->getData()['value'];
-//
-//        $this->montaApi->setOrder($priceIncl, $priceExcl);
-//
-//        $bAllProductsAvailable = true;
-//        $disabledeliverydays = false; // ToDO: Read from Magento Monta Settings
-//
-//        foreach($cart as $item) {
-//            // ToDO: Read from Magento Monta Settings
-////            if($leadingstockmontapacking) {
-////
-////            }
-//            if(true) {
-//                $this->montaApi->addProduct($item->getSku(), $item->getQty());
-//            } else {
-//                if ($stockItem->getQty() <= 0 || $stockItem->getQty() < $item->getQty()) {
-//                    $bAllProductsAvailable = false;
-//                    break;
-//                }
-//            }
-//
-//            if (false === $bAllProductsAvailable || $disabledeliverydays) {
-//                $this->montaApi->setOnstock(false);
-//            }
-//
-//           $test =  $item->getData()['price'];
-//        }
-        /** end price calculation */
 
         $magic['type'] = 'delivery';
         $magic['details'] = [
@@ -362,8 +325,8 @@ class DeliveryDates extends Component implements EvaluationInterface
             [
                 'code' => $shipperData->code,
                 'name' => $shipperData->shipper,
-//                'date' => $shipperDataDate,
-//                'time' => $shipperData->from . '-' . $shipperData->to,
+                'date' => $shipperDataDate,
+                'time' => $shipperData->from . '-' . $shipperData->to,
                 'price' => $shipperData->price,
                 'total_price' => '10.00',
             ]
@@ -430,6 +393,7 @@ class DeliveryDates extends Component implements EvaluationInterface
         $this->invalidateShippingRate();
         $this->pickupPointSelected = $pickup;
         $this->emit('monta_pickup_option_selected', $pickup);
+        $this->emit('monta_pickup_option_selected_initial_picked_change');
         $this->emitToRefresh('price-summary.total-segments');
     }
 
