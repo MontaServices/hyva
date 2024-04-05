@@ -16,11 +16,13 @@ use \Magento\Framework\App\ObjectManager;
 
         <div class="flex flex-col gap-2 ">
             <?php if ($magewire->userSelectedShipperCode == null): ?>
+                test
                 <?php if ($magewire->standardShipper != null): ?>
-
-                    <?php if (is_array($magewire->standardShipper)): ?>
-
-                        <?php $shipper = $magewire->standardShipper ?>
+                    test1
+<!--                    --><?php //var_dump($magewire->standardShipper) ?>
+<!--                    --><?php //if (!is_array($magewire->standardShipper)): ?>
+                        test2
+                        <?php $shipper = (array)$magewire->standardShipper ?>
                         <!--                    --><?php //var_dump($shipper) ?>
                         <div tabindex="1" wire:click="shipperStandardSelected('<?= $shipper['code'] ?>')"
                              class="flex  flex-row rounded-lg border-slate-300 border-2  justify-between focus:border-blue-300 p-8">
@@ -35,7 +37,7 @@ use \Magento\Framework\App\ObjectManager;
                             </div>
                         </div>
 
-                    <?php endif; ?>
+<!--                    --><?php //endif; ?>
                 <?php endif; ?>
             <?php endif; ?>
             <?php if ($magewire->userSelectedShipperCode == null): ?>
