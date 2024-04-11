@@ -20,6 +20,7 @@
                            template="Monta_MyModule::checkout/shipping/method/delivery_options.phtml">
                         <arguments>
                             <argument name="magewire" xsi:type="object">
+                                <base_url type="media" scope_info="1">payments/logo</base_url>
                                 Monta\MyModule\Magewire\Checkout\Shipping\Method\DeliveryOptions
                             </argument>
                         </arguments>

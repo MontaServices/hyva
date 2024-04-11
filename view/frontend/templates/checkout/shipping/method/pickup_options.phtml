@@ -16,42 +16,77 @@ $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
 ?>
 
 
-<div>
+<div class="w-full">
     <script defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQBDBkLTx367vlVPgXmF1zXkaA1pkD06M&callback=initMap"></script>
-    <div class="container">
+    <div>
         <?php $testt = json_encode($magewire->pickupOptions) ?>
 
         <?php
         $contentt = <<<HTML
-         <h3 id="selectedShipperText">selected shipper</h3>
-            <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Selecteer ophaalpunt</button>
-        <div class="flex flex-row justify-between">
 
-            <div id="map" style="height: 500px; width: 500px;"></div>
-        <ul>
+        <div class="flex flex-row justify-around">
+            <div class="flex flex-col">
+                <div>
+                    <div id="map" style="height: 500px; width: 500px;"></div>
+                 </div>
+                <button id="selectShipperMapsButton" @click="hide" type="button" class="btn">Kies geselecteerde afhaalpunt</button>
+            </div>
+        <ul class="overflow-y-scroll h-[540px]">
         HTML;//                @click=" $wire.set("foo", Math.random()) ">
         foreach ($magewire->pickupOptions as $pickup) {
+                $url = "Monta_MyModule::images/" . $pickup['shipperCode'] . '.png';
+
+
+
             $contentt .= '
-                <li id="' . $pickup['code'] . '"
-                @click="pickupSelected(' . $pickup['code'] . ');";
+            <li tabindex="1" class="p-2 border-2 border-transparent focus:border-blue-300  bg-slate-50  odd:bg-white even:bg-slate-50" id="' . $pickup['code'] . '"
+                @click="pickupSelected(' . "'" . trim($pickup['code']) . "'" . ');";
                 >
-                    ' . $pickup['company'] .
-                '</li>';
+                <ul>
+                   <div class="flex flex-row">
+                        <div class="flex mr-4 ">
+                            <img class="w-[27px] h-[27px] m-auto m-4" src="' .  $this->getViewFileUrl($url) . '"
+
+                        </div>
+                       <div class="flex flex-col ml-4">
+                           <li>
+                             ' . $pickup['company'] . ' ' . $pickup['priceFormatted'] . '
+                           </li>
+                          <li>
+                         ' . $pickup['displayName'] . ' | ' .  round($pickup['distanceMeters'] / 1000, 2)  . ' km
+                           </li>
+                            <li>
+                          ' . $pickup['street'] . '
+                           </li>
+                            <li>
+                          ' . $pickup['postalCode'] . '  ' . $pickup['city'] . '
+                           </li>
+                       </div>
+                </div>
+                </ul>
+            </li>';
         }
+
         echo '</ul></div>';
         ?>
-        <div x-data="hyva.modal()" class="flex flex-row items-stretch space-x-4 h-100 flex-grow">
-            <div>
-                Ophaalpunt
+        <div x-data="hyva.modal()" class="flex flex-row w-full h-100 flex-grow">
+            <div class="flex w-full justify-between">
+                <div class="flex items-center">
+                    <p>Ophaalpunt</p>
+
+                </div>
+                <div class="flex">
+                    <button @click="show" onclick="initMap(<?= htmlentities($testt) ?>)"
+                            class="btn btn-primary btn-next m-4"
+                            aria-haspopup="dialog">
+                        Kies ophaalpunt
+                    </button>
+                </div>
             </div>
-            <button @click="show" onclick="initMap(<?= htmlentities($testt) ?>)" class="btn btn-primary btn-next m-4"
-                    aria-haspopup="dialog">
-                Kies ophaalpunt
-            </button>
             <?= $modalViewModel->createModal()->withContent($contentt)->positionCenter()
                 ->withAriaLabelledby('the-label')
-                ->addDialogClass('border', 'border-10', 'border-blue-800', 'w-1/2', 'h-1/2')
+                ->addDialogClass('border', 'border-10', 'border-blue-800', 'w-1/3', 'p-8')
             ?>
         </div>
 

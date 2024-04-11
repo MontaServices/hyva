@@ -10,18 +10,23 @@ use Magento\Framework\View\Element\Template;
 
 ?>
 
-<div>
+<div class="w-full">
     <?php if ($magewire->selectedDeliveryOption != null): ?>
 <!--    --><?php //= var_dump($magewire->selectedDeliveryOption) ?>
     <div class="flex flex-col mt-4 space-y-2">
             <div class="flex-item p-2 items-center">
                 <div class="flex flex-row">
+                    <?php if(  $magewire->selectedDeliveryOption['shipper'] != "Standard Shipment"):?>
+
+                    <?php $url = "Monta_MyModule::images/" . $magewire->selectedDeliveryOption['shipperCodes'][0] . '.png' ?>
+                    <img class="w-[70px] h-[70px]" src="<?php echo $this->getViewFileUrl($url); ?>"/>
+                    <?php endif;?>
                     <h3 class="w-3/4 text-1xl font-bold justify-items-center"><?= '' . $magewire->selectedDeliveryOption['displayName'] ?></h3>
                     <div class= items-center"><?= $magewire->selectedDeliveryOption['priceFormatted'] ?></div>
                 </div>
 
-                <div>
-                    <a wire:click="resetShipperOption()">Klik hier om een andere bezorgoptie te kiezen</a>
+                <div class="mt-3 hover:cursor-pointer" >
+                    <a wire:click="resetShipperOption()" class="text-blue-300">Klik hier om een andere bezorgoptie te kiezen</a>
                 </div>
 
 <!--                <div class="mt-4 mb-4">-->

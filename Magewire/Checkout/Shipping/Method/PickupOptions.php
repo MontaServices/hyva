@@ -8,6 +8,7 @@ use Magewirephp\Magewire\Component;
 class PickupOptions extends Component
 {
     public $pickupOptions = [];
+    public $selectedPickupOption = null;
 
     protected $listeners = [
         'monta_pickup_button_selected' => 'init',
@@ -16,8 +17,10 @@ class PickupOptions extends Component
 
     protected $loader = 'Loading...';
 
+
     public function pickupSelectedFromMaps($pickupPointCode)
     {
+        $this->selectedPickupOption = $pickupPointCode;
         $this->emit('monta_pickup_selected', $pickupPointCode);
     }
 

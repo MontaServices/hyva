@@ -1,6 +1,11 @@
-@import "../web/css/my-awesome-cssfile-here.min.css";
+@import "components/buttons.css";
+/*@import "../web/css/my-awesome-cssfile-here.min.css";*/
 
 /*.no-scrollbar {*/
 /*    -ms-overflow-style: none; !* IE and Edge *!*/
 /*    scrollbar-width: none; !* Firefox *!*/
 /*}*/
+
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
