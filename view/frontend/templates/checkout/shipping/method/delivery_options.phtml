@@ -25,7 +25,7 @@ use \Magento\Framework\App\ObjectManager;
                         <?php if (count($magewire->allDays) > 0): ?>
                             <?php foreach ($magewire->allDays as $key => $item): ?>
                                 <div tabindex="1" wire:click="setSelectedDate('<?= $item['date'] ?>')"
-                                     class="testclasses flex justify-center items-center bg-regal-blue m-2 w-10 h-10 justify-content-center rounded-full border-2 hover:cursor-pointer focus:border-blue-300 <?= ($magewire->selectedDate == $item['date']) ? 'border-blue-300' : (($magewire->selectedDate != $item['date'] && $magewire->selectedDate != null) ? 'border-slate-100' : 'border-blue-100') ?>">
+                                     class="testclasses flex justify-center items-center bg-regal-blue m-2 w-10 h-10 justify-content-center rounded-full border-2 hover:cursor-pointer focus:border-blue-300 <?= ($magewire->selectedDate == $item['date']) ? 'border-blue-300' : (($magewire->selectedDate != $item['date'] && $magewire->selectedDate != null) ? 'border-slate-100' : 'border-transparent') ?>">
                                     <p><?= $item['day'] ?></p>
                                 </div>
                             <?php endforeach; ?>
