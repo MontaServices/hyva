@@ -28,6 +28,7 @@ class DeliveryDates extends Component implements EvaluationInterface
     public $shouldShowDatePicker = true;
     public $result;
     public $userSelectedShipperCode = null;
+    public $userSelectedShipperCodeForDelivery = null;
     public $pickupPointSelected = null;
     public $userSelectedShipperOptions = [];
     private $montaApi = null;
@@ -292,23 +293,27 @@ class DeliveryDates extends Component implements EvaluationInterface
          $this->userSelectedShipperCode = $this->standardShipper['code'];
 
         $this->invalidateShippingRate();
-        $this->emit('monta_delivery_option_selected', $this->standardShipper);
+        $this->emit('monta_delivery_option_selected', $this->standardShipper, []);
         $this->emitToRefresh('price-summary.total-segments');
     }
 
     public function shipperSelected($shipperCode, $deliveryOptions)
     {
         $this->type = self::TYPE_DELIVERY;
+        $this->userSelectedShipperCodeForDelivery = $shipperCode;
         $this->userSelectedShipperCode = $shipperCode;
         $this->checkoutSession->setSelectedShipperCode($shipperCode);
 
         $shipperData = $this->getShipperByShipperCode($shipperCode, $this->result['DeliveryOptions']);
         $shipperDataDate = $this->getShipperDateByShipperCode($shipperCode, $this->result['DeliveryOptions']);
 
+
+        $deliveryOptionsFlattenedDescription = [];
         $deliveryOptionsFlattened = [];
         foreach($deliveryOptions as $givenOptions) {
             foreach($shipperData->deliveryOptions as $code) {
                 if($givenOptions == $code->code) {
+                    $deliveryOptionsFlattenedDescription[] = $code->description;
                     $deliveryOptionsFlattened[] = $code->code;
                     $deliveryOptionsFlattened = array_unique($deliveryOptionsFlattened);
                 }
@@ -341,7 +346,7 @@ class DeliveryDates extends Component implements EvaluationInterface
          $this->userSelectedShipperCode = $shipperCode;
 
         $this->invalidateShippingRate();
-        $this->emit('monta_delivery_option_selected', $shipperData);
+        $this->emit('monta_delivery_option_selected', $shipperData, $deliveryOptionsFlattenedDescription);
         $this->emitToRefresh('price-summary.total-segments');
     }
 

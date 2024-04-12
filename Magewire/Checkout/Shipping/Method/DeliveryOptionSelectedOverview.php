@@ -12,9 +12,12 @@ class DeliveryOptionSelectedOverview extends Component
         'monta_delivery_option_selected' => 'init'
     ];
 
-    public function init($data)
+    public $selectedOptions =[];
+
+    public function init($data, $deliveryOptionsOptions)
     {
         $this->selectedDeliveryOption = $data;
+        $this->selectedOptions = $deliveryOptionsOptions;
     }
 
     public function resetShipperOption(){

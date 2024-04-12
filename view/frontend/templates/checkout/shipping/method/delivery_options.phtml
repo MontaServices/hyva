@@ -21,21 +21,25 @@ use \Magento\Framework\App\ObjectManager;
             </div>
             <?php if (count($magewire->deliveryOptions) > 1): ?>
                 <div class="flex">
-                    <?php if (isset($magewire->allDays)): ?>
-                        <?php if (count($magewire->allDays) > 0): ?>
-                            <?php foreach ($magewire->allDays as $key => $item): ?>
-                                <div tabindex="1" wire:click="setSelectedDate('<?= $item['date'] ?>')"
-                                     class="testclasses flex justify-center items-center bg-regal-blue m-2 w-10 h-10 justify-content-center rounded-full border-2 hover:cursor-pointer focus:border-blue-300 <?= ($magewire->selectedDate == $item['date']) ? 'border-blue-300' : (($magewire->selectedDate != $item['date'] && $magewire->selectedDate != null) ? 'border-slate-100' : 'border-transparent') ?>">
-                                    <p><?= $item['day'] ?></p>
-                                </div>
-                            <?php endforeach; ?>
+                    <div class="flex">
+                        <?php if (isset($magewire->allDays)): ?>
+                            <?php if (count($magewire->allDays) > 0): ?>
+                                <?php foreach ($magewire->allDays as $key => $item): ?>
+                                    <div tabindex="1" wire:click="setSelectedDate('<?= $item['date'] ?>')"
+                                         class="testclasses flex justify-center items-center bg-regal-blue m-2 w-10 h-10 justify-content-center rounded-full border-2 hover:cursor-pointer focus:border-blue-300 <?= ($magewire->selectedDate == $item['date']) ? 'border-blue-300' : (($magewire->selectedDate != $item['date'] && $magewire->selectedDate != null) ? 'border-slate-100' : 'border-transparent') ?>">
+                                        <p><?= $item['day'] ?></p>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         <?php endif; ?>
-                    <?php endif; ?>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                         stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M6.75 3v2.25npmrc M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
-                    </svg>
+                    </div>
+                    <div class="flex m-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M6.75 3v2.25 M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
+                        </svg>
+                    </div> 
                 </div>
             <?php endif; ?>
 
@@ -56,7 +60,6 @@ use \Magento\Framework\App\ObjectManager;
                 <div
                     class="flex flex-row space-x-4  items-stretch w-80 h-100 flex-grow overflow-x-scroll no-scrollbar"
                     id="datepicker">
-<!--                    --><?php //var_dump($magewire->deliveryOptions)?>
                     <?php foreach ($magewire->deliveryOptions as $key => $item): ?>
                         <?php if ($item['dateFormatted'] != ''): ?>
                             <div tabindex="1"
@@ -64,9 +67,9 @@ use \Magento\Framework\App\ObjectManager;
                                  class="border-solid border-2 p-8 flex-shrink-0 focus:border-blue-300 hover:cursor-pointer h-40 rounded-lg  date-picker-div <?= ($magewire->selectedDate == $item['date']) ? 'border-blue-300' : (($magewire->selectedDate != $item['date'] && $magewire->selectedDate != null) ? 'border-slate-100' : 'border-blue-100') ?>">
                                 <p class="font-bold"><?= $item['day'] ?></p>
 
-                                <?php if( $item['options'][0]['from'] != null && $item['options'][0]['to'] != null):?>
-                                <span><?= $item['options'][0]['from'] ?> - <?= $item['options'][0]['to'] ?></span>
-                                <?php endif;?>
+                                <?php if ($item['options'][0]['from'] != null && $item['options'][0]['to'] != null): ?>
+                                    <span><?= $item['options'][0]['from'] ?> - <?= $item['options'][0]['to'] ?></span>
+                                <?php endif; ?>
                                 <br/>
                                 <br/>
                                 <p><?= $item['options'][0]['priceFormatted'] ?></p>
@@ -99,9 +102,7 @@ use \Magento\Framework\App\ObjectManager;
             <!--                <div class="md:container md:mx-auto">test</div>-->
             <div class="flex-item  p-2 items-center border-2 border-blue-300 rounded-lg">
                 <div class="flex flex-row justify-start m-2">
-                    <!--                    --><?php //var_dump($delivery) ?>
-                    <?php $shipper = $delivery['shipperCodes'][0] == "SEL" ? "DHL" : $delivery['shipperCodes'][0]?>
-                    <?php $url = "Monta_MyModule::images/" . $shipper  . '.png' ?>
+                    <?php $url = "Monta_MyModule::images/" . $delivery['shipperCodes'][0] . '.png' ?>
                     <img class="w-[70px] h-[70px]  m-auto ml-0 mr-2" src="<?php echo $this->getViewFileUrl($url); ?>"/>
                     <div class="w-3/4 flex flex-col justify-between m-2 ">
                         <h3 class="w-3/4 text-1xl font-bold justify-items-center p-2"><?= $delivery['displayName'] ?></h3>
